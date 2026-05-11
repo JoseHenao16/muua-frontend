@@ -1,1 +1,13 @@
-// app global css in SCSS form
+.header-transparente,
+.header-transparente.q-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.header-oscuro,
+.header-oscuro.q-header {
+  background-color: #1a1209 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+}
