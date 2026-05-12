@@ -53,3 +53,14 @@ export const generarReporte = async (codigos) => {
   link.click()
   link.remove()
 }
+
+export const generarReportePdf = async (codigos) => {
+  const response = await api.post('/reporte-pdf', { codigos }, { responseType: 'blob' })
+  const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }))
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', 'reporte_icanh.pdf')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+}
