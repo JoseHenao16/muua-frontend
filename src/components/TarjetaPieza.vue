@@ -1,80 +1,44 @@
 <!-- src/components/TarjetaPieza.vue -->
 <template>
-  <q-card
-    class="tarjeta-pieza cursor-pointer full-height"
-    flat
-    bordered
-    @click="irADetalle"
-  >
-    <!-- Imagen de la pieza -->
-    <q-img
-      :src="imagenUrl"
-      :ratio="4/3"
-      spinner-color="primary"
-      @error="imagenRota = true"
-    >
-      <!-- Placeholder si no hay imagen -->
-      <template v-if="imagenRota" v-slot:default>
-        <div class="absolute-full flex flex-center bg-grey-3 text-grey-6 column">
-          <q-icon name="image_not_supported" size="48px" />
-          <div class="text-caption q-mt-sm">{{ pieza.numeroRegistro }}</div>
-        </div>
-      </template>
+  <article class="tarjeta" @click="irADetalle">
 
-      <!-- Badge de colección sobre la imagen -->
-      <div class="absolute-bottom-left q-pa-xs">
-        <q-badge color="primary" :label="pieza.coleccion || 'Sin colección'" />
-      </div>
-    </q-img>
+    <!-- Imagen -->
+    <div class="tarjeta__img-wrap">
+      <q-img
+        :src="imagenUrl"
+        :ratio="4/3"
+        spinner-color="secondary"
+        class="tarjeta__img"
+        @error="imagenRota = true"
+      >
+        <!-- Sin imagen -->
+        <template v-if="imagenRota" v-slot:default>
+          <div class="tarjeta__no-img">
+            <q-icon name="image_not_supported" size="36px" />
+            <span class="tarjeta__no-img-code">{{ pieza.numeroRegistro }}</span>
+          </div>
+        </template>
+      </q-img>
 
-    <q-card-section class="q-pb-xs">
-      <!-- Código de registro -->
-      <div class="text-caption text-grey-6 q-mb-xs">
-        Reg. {{ pieza.numeroRegistro }}
+      <!-- Hover overlay -->
+      <div class="tarjeta__hover-overlay">
+        <span class="tarjeta__ver-mas">Ver detalle →</span>
       </div>
+    </div>
 
-      <!-- Nombre de la pieza -->
-      <div class="text-subtitle2 text-weight-bold ellipsis-2-lines">
-        {{ pieza.denominacion || 'Sin denominación' }}
-      </div>
-    </q-card-section>
+    <!-- Info -->
+    <div class="tarjeta__body">
+      <p class="tarjeta__codigo">COL · {{ pieza.numeroRegistro }}</p>
+      <h3 class="tarjeta__nombre">{{ pieza.denominacion || 'Sin denominación' }}</h3>
 
-    <q-card-section class="q-pt-xs q-pb-sm">
-      <!-- Chips de metadatos clave -->
-      <div class="row q-gutter-xs">
-        <q-chip
-          v-if="pieza.area"
-          dense
-          outline
-          color="secondary"
-          text-color="secondary"
-          size="sm"
-          icon="place"
-          :label="pieza.area"
-        />
-        <q-chip
-          v-if="pieza.cultura"
-          dense
-          outline
-          color="accent"
-          text-color="accent"
-          size="sm"
-          icon="group"
-          :label="pieza.cultura"
-        />
-        <q-chip
-          v-if="pieza.periodo"
-          dense
-          outline
-          color="grey-7"
-          text-color="grey-7"
-          size="sm"
-          icon="schedule"
-          :label="pieza.periodo"
-        />
+      <div class="tarjeta__chips">
+        <span v-if="pieza.area"    class="tarjeta__chip">{{ pieza.area }}</span>
+        <span v-if="pieza.cultura" class="tarjeta__chip">{{ pieza.cultura }}</span>
+        <span v-if="pieza.periodo" class="tarjeta__chip tarjeta__chip--muted">{{ pieza.periodo }}</span>
       </div>
-    </q-card-section>
-  </q-card>
+    </div>
+
+  </article>
 </template>
 
 <script setup>
@@ -83,39 +47,137 @@ import { useRouter } from 'vue-router'
 import { getImagenUrl } from 'src/services/api'
 
 const props = defineProps({
-  pieza: {
-    type: Object,
-    required: true,
-  }
+  pieza: { type: Object, required: true }
 })
 
 const router = useRouter()
 const imagenRota = ref(false)
-
-const imagenUrl = computed(() => {
-  return getImagenUrl(props.pieza.numeroRegistro)
-})
+const imagenUrl = computed(() => getImagenUrl(props.pieza.numeroRegistro))
 
 function irADetalle() {
-  router.push({
-    name: 'pieza',
-    params: { codigo: props.pieza.numeroRegistro }
-  })
+  router.push({ name: 'pieza', params: { codigo: props.pieza.numeroRegistro } })
 }
 </script>
 
 <style scoped>
-.tarjeta-pieza {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.tarjeta {
+  background: #100e08;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s;
+  position: relative;
 }
-.tarjeta-pieza:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+.tarjeta:hover {
+  background: #18150d;
 }
-.ellipsis-2-lines {
+
+/* Imagen */
+.tarjeta__img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.tarjeta__img {
+  display: block;
+  transition: transform 0.4s ease;
+}
+.tarjeta:hover .tarjeta__img {
+  transform: scale(1.03);
+}
+
+/* Sin imagen */
+.tarjeta__no-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #1a1810;
+  color: rgba(255,250,244,0.2);
+}
+.tarjeta__no-img-code {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+}
+
+/* Overlay hover */
+.tarjeta__hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(201,168,76,0.08);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tarjeta:hover .tarjeta__hover-overlay {
+  opacity: 1;
+}
+.tarjeta__ver-mas {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  color: #C9A84C;
+  background: rgba(16,14,8,0.8);
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+}
+
+/* Body */
+.tarjeta__body {
+  padding: 1rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.tarjeta__codigo {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 2px;
+  color: #C9A84C;
+  margin: 0;
+}
+
+.tarjeta__nombre {
+  font-family: 'Playfair', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #FFFAF4;
+  margin: 0;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.tarjeta__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.tarjeta__chip {
+  font-family: 'Sagata', sans-serif;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: rgba(255,250,244,0.65);
+  background: rgba(201,168,76,0.05);
+}
+
+.tarjeta__chip--muted {
+  border-color: rgba(255,250,244,0.1);
+  color: rgba(255,250,244,0.35);
+  background: none;
 }
 </style>
