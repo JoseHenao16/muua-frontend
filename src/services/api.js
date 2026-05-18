@@ -64,3 +64,12 @@ export const generarReportePdf = async (codigos) => {
   link.click()
   link.remove()
 }
+
+export const getImagenesPieza = async (codigo) => {
+  try {
+    const response = await api.get(`/imagenes/${encodeURIComponent(codigo)}`)
+    return response.data.ejecucion.datos || []
+  } catch {
+    return []
+  }
+}

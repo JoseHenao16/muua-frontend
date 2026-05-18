@@ -1,7 +1,11 @@
 <!-- src/pages/IndexPage.vue -->
 <template>
-  <div class="fp-wrapper" @wheel.prevent="onWheel" @touchstart="onTouchStart" @touchend="onTouchEnd">
-
+  <div
+    class="fp-wrapper"
+    @wheel.prevent="onWheel"
+    @touchstart="onTouchStart"
+    @touchend="onTouchEnd"
+  >
     <!-- ===== DOTS NAV ===== -->
     <nav class="slide-nav" aria-label="Navegación de secciones">
       <button
@@ -18,7 +22,6 @@
          SLIDE 0 · HERO
          =================================================== -->
     <section class="fp-slide hero-slide" :class="{ visible: current === 0, above: current > 0 }">
-
       <!-- Fondo -->
       <div class="hero-bg">
         <img src="~assets/img/Fondo MUUA.png" class="hero-bg-img" alt="" aria-hidden="true" />
@@ -27,7 +30,6 @@
 
       <!-- Cuerpo: dos columnas -->
       <div class="hero-body">
-
         <!-- COL IZQUIERDA -->
         <div class="hero-left">
           <p class="hero-eyebrow">COLECCIÓN DIGITAL · MUUA</p>
@@ -38,9 +40,9 @@
           </h1>
 
           <p class="hero-desc">
-            Conectando conocimiento y patrimonio: una experiencia digital para descubrir,
-            explorar y consultar la colección arqueológica del Museo Universitario de la
-            Universidad de Antioquia.
+            Conectando conocimiento y patrimonio: una experiencia digital para descubrir, explorar y
+            consultar la colección arqueológica del Museo Universitario de la Universidad de
+            Antioquia.
           </p>
 
           <div class="hero-btns">
@@ -65,13 +67,14 @@
         <div class="hero-right">
           <img src="~assets/img/Middle.png" class="hero-piece" alt="Pieza arqueológica" />
         </div>
-
       </div>
 
       <!-- Estadísticas — fila inferior -->
       <div class="hero-stats">
         <div class="stat-item">
-          <div class="stat-number">{{ stats.total ? stats.total.toLocaleString('es-CO') : '758' }}</div>
+          <div class="stat-number">
+            {{ stats.total ? stats.total.toLocaleString('es-CO') : '758' }}
+          </div>
           <div class="stat-label text-primary">PIEZAS REGISTRADAS</div>
         </div>
         <div class="stat-divider" />
@@ -91,7 +94,6 @@
         <span class="scroll-hint__text">Explorar</span>
         <span class="scroll-hint__arrow">↓</span>
       </button>
-
     </section>
 
     <!-- ===================================================
@@ -99,7 +101,6 @@
          =================================================== -->
     <section class="fp-slide acerca-slide" :class="{ visible: current === 1, above: current > 1 }">
       <div class="acerca-inner">
-
         <!-- Izquierda: imagen museo -->
         <div class="acerca-left">
           <img src="~assets/img/Fondo MUUA.png" class="acerca-img" alt="Museo Universitario" />
@@ -129,23 +130,75 @@
             interfaz moderna, garantizando integridad, eficiencia y escalabilidad.
           </p>
         </div>
-
       </div>
     </section>
 
     <!-- ===================================================
-         SLIDE 2 · FOOTER
-         =================================================== -->
-    <section class="fp-slide footer-slide" :class="{ visible: current === 2, above: false }">
-      <div class="footer-inner">
+     SLIDE 2 · ESTADÍSTICAS
+     =================================================== -->
+    <section class="fp-slide stats-slide" :class="{ visible: current === 2, above: current > 2 }">
+      <div class="stats-inner">
+        <p class="section-eyebrow">ESTADÍSTICAS DE LA COLECCIÓN</p>
+        <h2 class="stats-title">La colección en números</h2>
 
+        <div class="stats-grid">
+          <!-- Piezas por área -->
+          <div class="stats-col">
+            <p class="stats-col-heading">Por área de material</p>
+            <div v-for="[key, val] in topArea" :key="key" class="barra-item">
+              <div class="barra-meta">
+                <span class="barra-label">{{ key }}</span>
+                <span class="barra-val">{{ val }}</span>
+              </div>
+              <div class="barra-bg">
+                <div class="barra-fill" :style="{ width: pct(val, topArea) + '%' }" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Piezas por cultura -->
+          <div class="stats-col">
+            <p class="stats-col-heading">Por cultura</p>
+            <div v-for="[key, val] in topCultura" :key="key" class="barra-item">
+              <div class="barra-meta">
+                <span class="barra-label">{{ key }}</span>
+                <span class="barra-val">{{ val }}</span>
+              </div>
+              <div class="barra-bg">
+                <div class="barra-fill" :style="{ width: pct(val, topCultura) + '%' }" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Piezas por periodo -->
+          <div class="stats-col">
+            <p class="stats-col-heading">Por periodo histórico</p>
+            <div v-for="[key, val] in topPeriodo" :key="key" class="barra-item">
+              <div class="barra-meta">
+                <span class="barra-label">{{ key }}</span>
+                <span class="barra-val">{{ val }}</span>
+              </div>
+              <div class="barra-bg">
+                <div class="barra-fill" :style="{ width: pct(val, topPeriodo) + '%' }" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================
+     SLIDE 3 · FOOTER
+     =================================================== -->
+    <section class="fp-slide footer-slide" :class="{ visible: current === 3, above: false }">
+      <div class="footer-inner">
         <div class="footer-top">
           <!-- Logo + descripción -->
           <div class="footer-brand">
             <img src="~assets/img/Muua - Logo.png" alt="MUUA" class="footer-logo" />
             <p class="footer-brand-desc">
-              Sistema digital de visualización de la colección arqueológica del
-              Museo Universitario de la Universidad de Antioquia.
+              Sistema digital de visualización de la colección arqueológica del Museo Universitario
+              de la Universidad de Antioquia.
             </p>
           </div>
 
@@ -181,10 +234,8 @@
           <span>Fundamentos de Investigación · Grupo 4</span>
           <span>Patrimonio Nacional ICANH</span>
         </div>
-
       </div>
     </section>
-
   </div>
 </template>
 
@@ -194,13 +245,14 @@ import { getEstadisticas } from 'src/services/api'
 
 /* ── Fullpage scroll ── */
 const current = ref(0)
-const TOTAL = 3
+const TOTAL = 4
 let isScrolling = false
 let touchStartY = 0
 
 const slides = [
   { label: 'Hero' },
   { label: 'Acerca del proyecto' },
+  { label: 'Estadísticas' },
   { label: 'Contacto' },
 ]
 
@@ -213,10 +265,14 @@ function onWheel(e) {
   isScrolling = true
   if (e.deltaY > 0) goTo(current.value + 1)
   else goTo(current.value - 1)
-  setTimeout(() => { isScrolling = false }, 900)
+  setTimeout(() => {
+    isScrolling = false
+  }, 900)
 }
 
-function onTouchStart(e) { touchStartY = e.touches[0].clientY }
+function onTouchStart(e) {
+  touchStartY = e.touches[0].clientY
+}
 function onTouchEnd(e) {
   const diff = touchStartY - e.changedTouches[0].clientY
   if (Math.abs(diff) < 50) return
@@ -225,24 +281,55 @@ function onTouchEnd(e) {
 }
 
 function onKeydown(e) {
-  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goTo(current.value + 1) }
-  if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); goTo(current.value - 1) }
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+    e.preventDefault()
+    goTo(current.value + 1)
+  }
+  if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault()
+    goTo(current.value - 1)
+  }
 }
 
-onMounted(()  => { window.addEventListener('keydown', onKeydown); cargarStats() })
-onUnmounted(() => { window.removeEventListener('keydown', onKeydown) })
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
+  cargarStats()
+})
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
 
 /* ── Estadísticas ── */
 const stats = ref({ total: 0, porCultura: {}, porArea: {}, porPeriodo: {} })
 
-const totalColecciones = computed(() =>
-  Object.keys(stats.value.porCultura || {}).filter(k => k !== 'Sin clasificar').length || '—'
+const totalColecciones = computed(
+  () =>
+    Object.keys(stats.value.porCultura || {}).filter((k) => k !== 'Sin clasificar').length || '—',
 )
 const anioMasAntiguo = computed(() => '200 a.C')
 
+function top(obj, n = 6) {
+  return Object.entries(obj || {})
+    .filter(([k]) => k !== 'Sin clasificar')
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+}
+
+function pct(val, lista) {
+  const max = lista[0]?.[1] || 1
+  return Math.round((val / max) * 100)
+}
+
+const topArea    = computed(() => top(stats.value.porArea, 6))
+const topCultura = computed(() => top(stats.value.porCultura, 6))
+const topPeriodo = computed(() => top(stats.value.porPeriodo, 6))
+
 async function cargarStats() {
-  try { stats.value = await getEstadisticas() }
-  catch (e) { console.error('Error cargando estadísticas:', e) }
+  try {
+    stats.value = await getEstadisticas()
+  } catch (e) {
+    console.error('Error cargando estadísticas:', e)
+  }
 }
 </script>
 
@@ -272,14 +359,16 @@ async function cargarStats() {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: background 0.3s, transform 0.3s;
+  transition:
+    background 0.3s,
+    transform 0.3s;
 }
 .slide-dot.active {
-  background: #C9A84C;
+  background: #c9a84c;
   transform: scale(1.4);
 }
 
@@ -287,14 +376,22 @@ async function cargarStats() {
 .fp-slide {
   position: absolute;
   inset: 0;
-  transition: transform 0.85s cubic-bezier(0.77, 0, 0.18, 1),
-              opacity  0.85s cubic-bezier(0.77, 0, 0.18, 1);
+  transition:
+    transform 0.85s cubic-bezier(0.77, 0, 0.18, 1),
+    opacity 0.85s cubic-bezier(0.77, 0, 0.18, 1);
   transform: translateY(100%);
   opacity: 0;
   pointer-events: none;
 }
-.fp-slide.visible  { transform: translateY(0);    opacity: 1; pointer-events: all; }
-.fp-slide.above    { transform: translateY(-100%); opacity: 0; }
+.fp-slide.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+.fp-slide.above {
+  transform: translateY(-100%);
+  opacity: 0;
+}
 
 /* ============================================================
    SLIDE 0 · HERO
@@ -322,8 +419,19 @@ async function cargarStats() {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right,  rgba(10,8,3,0.95) 0%, rgba(10,8,3,0.55) 55%, rgba(10,8,3,0.15) 100%),
-    linear-gradient(to bottom, rgba(10,8,3,0.5)  0%, transparent 25%, transparent 65%, rgba(10,8,3,0.9) 100%);
+    linear-gradient(
+      to right,
+      rgba(10, 8, 3, 0.95) 0%,
+      rgba(10, 8, 3, 0.55) 55%,
+      rgba(10, 8, 3, 0.15) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(10, 8, 3, 0.5) 0%,
+      transparent 25%,
+      transparent 65%,
+      rgba(10, 8, 3, 0.9) 100%
+    );
 }
 
 /* Dos columnas */
@@ -349,7 +457,7 @@ async function cargarStats() {
   font-family: 'Space Mono', monospace;
   font-size: 0.7rem;
   letter-spacing: 3px;
-  color: #C9A84C;
+  color: #c9a84c;
   margin: 0 0 1.25rem;
 }
 
@@ -362,13 +470,13 @@ async function cargarStats() {
 }
 .hero-title__white {
   font-weight: 700;
-  color: #FFFAF4;
+  color: #fffaf4;
   display: block;
 }
 .hero-title__gold {
   font-weight: 600;
   font-style: italic;
-  color: #C9A84C;
+  color: #c9a84c;
   display: block;
 }
 
@@ -377,7 +485,7 @@ async function cargarStats() {
   font-weight: 700;
   font-size: 1.1rem;
   line-height: 1.75;
-  color: #FFFAF4;
+  color: #fffaf4;
   max-width: 480px;
   margin: 0 0 2.5rem;
 }
@@ -389,7 +497,7 @@ async function cargarStats() {
 }
 
 .btn-primary-custom {
-  background: #C9A84C !important;
+  background: #c9a84c !important;
   color: #1a1209 !important;
   font-family: 'Sagata', sans-serif;
   font-size: 0.85rem;
@@ -397,16 +505,16 @@ async function cargarStats() {
   padding: 0.6rem 1.6rem;
 }
 .btn-outline-custom {
-  border: 1px solid rgba(255,255,255,0.5) !important;
-  color: #FFFAF4 !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  color: #fffaf4 !important;
   font-family: 'Sagata', sans-serif;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
   padding: 0.6rem 1.6rem;
 }
 .btn-outline-custom:hover {
-  border-color: #C9A84C !important;
-  color: #C9A84C !important;
+  border-color: #c9a84c !important;
+  color: #c9a84c !important;
 }
 
 /* Columna derecha — pieza */
@@ -420,7 +528,7 @@ async function cargarStats() {
   max-height: 70vh;
   max-width: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 0 60px rgba(201,168,76,0.15));
+  filter: drop-shadow(0 0 60px rgba(201, 168, 76, 0.15));
 }
 
 /* Estadísticas fila inferior */
@@ -432,8 +540,8 @@ async function cargarStats() {
   justify-content: center;
   gap: 0;
   padding: 1.5rem 120px;
-  border-top: 1px solid rgba(201,168,76,0.15);
-  background: rgba(10,8,3,0.5);
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+  background: rgba(10, 8, 3, 0.5);
   backdrop-filter: blur(4px);
 }
 
@@ -445,7 +553,7 @@ async function cargarStats() {
   font-family: 'Playfair', serif;
   font-weight: 700;
   font-size: clamp(1.8rem, 3vw, 2.8rem);
-  color: #C9A84C;
+  color: #c9a84c;
   line-height: 1;
 }
 .stat-label {
@@ -458,7 +566,7 @@ async function cargarStats() {
 .stat-divider {
   width: 1px;
   height: 40px;
-  background: rgba(201,168,76,0.25);
+  background: rgba(201, 168, 76, 0.25);
   flex-shrink: 0;
 }
 
@@ -481,19 +589,24 @@ async function cargarStats() {
   font-family: 'Space Mono', monospace;
   font-size: 0.6rem;
   letter-spacing: 3px;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255, 255, 255, 0.35);
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
 .scroll-hint__arrow {
-  color: rgba(201,168,76,0.6);
+  color: rgba(201, 168, 76, 0.6);
   font-size: 1rem;
   animation: bounce 1.8s infinite;
   align-self: center;
 }
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
 }
 
 /* ============================================================
@@ -527,7 +640,7 @@ async function cargarStats() {
   inset: 0;
   background:
     linear-gradient(to right, transparent 60%, #111008 100%),
-    linear-gradient(to bottom, rgba(10,8,3,0.3) 0%, transparent 20%);
+    linear-gradient(to bottom, rgba(10, 8, 3, 0.3) 0%, transparent 20%);
 }
 .acerca-img-caption {
   position: absolute;
@@ -538,7 +651,7 @@ async function cargarStats() {
   font-family: 'Playfair', serif;
   font-weight: 700;
   font-size: clamp(3rem, 7vw, 6rem);
-  color: rgba(255,255,255,0.08);
+  color: rgba(255, 255, 255, 0.08);
   letter-spacing: -4px;
   line-height: 1;
   user-select: none;
@@ -546,7 +659,7 @@ async function cargarStats() {
 .acerca-caption-label {
   font-family: 'Sagata', sans-serif;
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255, 255, 255, 0.35);
   letter-spacing: 1px;
   margin-top: 0.5rem;
 }
@@ -557,14 +670,14 @@ async function cargarStats() {
   flex-direction: column;
   justify-content: center;
   padding: 5rem 5rem 5rem 4rem;
-  border-left: 1px solid rgba(201,168,76,0.12);
+  border-left: 1px solid rgba(201, 168, 76, 0.12);
 }
 
 .section-eyebrow {
   font-family: 'Space Mono', monospace;
   font-size: 0.65rem;
   letter-spacing: 3px;
-  color: #C9A84C;
+  color: #c9a84c;
   margin: 0 0 1.25rem;
 }
 
@@ -572,7 +685,7 @@ async function cargarStats() {
   font-family: 'Playfair', serif;
   font-weight: 700;
   font-size: clamp(2rem, 3.2vw, 3.2rem);
-  color: #FFFAF4;
+  color: #fffaf4;
   line-height: 1.1;
   margin: 0 0 2rem;
 }
@@ -580,13 +693,15 @@ async function cargarStats() {
   font-style: italic;
   font-weight: 600;
 }
-.text-secondary { color: #C9A84C !important; }
+.text-secondary {
+  color: #c9a84c !important;
+}
 
 .acerca-body {
   font-family: 'Cormorant', serif;
   font-weight: 400;
   font-size: 1rem;
-  color: rgba(255,250,244,0.65);
+  color: rgba(255, 250, 244, 0.65);
   line-height: 1.8;
   margin: 0 0 1.25rem;
 }
@@ -596,13 +711,108 @@ async function cargarStats() {
   font-weight: 500;
   font-style: italic;
   font-size: 1.8rem;
-  border-left: 2px solid #C9A84C;
+  border-left: 2px solid #c9a84c;
   padding-left: 1.25rem;
   margin: 1.5rem 0;
 }
 
 /* ============================================================
-   SLIDE 2 · FOOTER
+   SLIDE 2 · ESTADÍSTICAS
+   ============================================================ */
+.stats-slide {
+  background: #0f0d07;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+
+.stats-inner {
+  width: 100%;
+  padding: 0 120px;
+}
+
+.stats-title {
+  font-family: 'Playfair', serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  color: #FFFAF4;
+  margin: 0 0 3rem;
+  line-height: 1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+}
+
+.stats-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.stats-col-heading {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 2.5px;
+  color: #C9A84C;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.barra-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.barra-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.barra-label {
+  font-family: 'Cormorant', serif;
+  font-size: 0.9rem;
+  color: rgba(255,250,244,0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+}
+
+.barra-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(201,168,76,0.7);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.barra-bg {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.barra-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C9A84C, #8B6914);
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+@media (max-width: 900px) {
+  .stats-inner  { padding: 0 2rem; }
+  .stats-grid   { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ============================================================
+   SLIDE 3 · FOOTER
    ============================================================ */
 .footer-slide {
   background: #0d0b06;
@@ -641,14 +851,14 @@ async function cargarStats() {
   font-family: 'Cormorant', serif;
   font-size: 0.95rem;
   line-height: 1.75;
-  color: rgba(255,250,244,0.3);
+  color: rgba(255, 250, 244, 0.3);
   max-width: 300px;
 }
 
 .footer-vdivider {
   width: 1px;
   align-self: stretch;
-  background: rgba(255,255,255,0.07);
+  background: rgba(255, 255, 255, 0.07);
   margin: 0 3.5rem;
   flex-shrink: 0;
 }
@@ -664,31 +874,33 @@ async function cargarStats() {
   font-family: 'Space Mono', monospace;
   font-size: 0.6rem;
   letter-spacing: 2.5px;
-  color: rgba(255,250,244,0.3);
+  color: rgba(255, 250, 244, 0.3);
   margin: 0 0 0.75rem;
 }
 
 .footer-link {
   font-family: 'Sagata', sans-serif;
   font-size: 0.9rem;
-  color: rgba(255,250,244,0.55);
+  color: rgba(255, 250, 244, 0.55);
   text-decoration: none;
   transition: color 0.2s;
   width: fit-content;
 }
-.footer-link:hover { color: #C9A84C; }
+.footer-link:hover {
+  color: #c9a84c;
+}
 
 .footer-col-info {
   font-family: 'Sagata', sans-serif;
   font-size: 0.82rem;
-  color: rgba(255,250,244,0.4);
+  color: rgba(255, 250, 244, 0.4);
   margin: 0;
   line-height: 1.6;
 }
 
 .footer-hdivider {
   height: 1px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   margin-bottom: 2rem;
 }
 
@@ -698,7 +910,7 @@ async function cargarStats() {
   font-family: 'Space Mono', monospace;
   font-size: 0.58rem;
   letter-spacing: 1.5px;
-  color: rgba(255,250,244,0.2);
+  color: rgba(255, 250, 244, 0.2);
   text-transform: uppercase;
 }
 
@@ -706,19 +918,48 @@ async function cargarStats() {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 900px) {
-  .hero-body        { grid-template-columns: 1fr; padding: 0 2rem; }
-  .hero-right       { display: none; }
-  .hero-stats       { padding: 1.5rem 2rem; gap: 0; }
-  .stat-item        { padding: 0 1.5rem; }
-  .scroll-hint      { left: 2rem; }
+  .hero-body {
+    grid-template-columns: 1fr;
+    padding: 0 2rem;
+  }
+  .hero-right {
+    display: none;
+  }
+  .hero-stats {
+    padding: 1.5rem 2rem;
+    gap: 0;
+  }
+  .stat-item {
+    padding: 0 1.5rem;
+  }
+  .scroll-hint {
+    left: 2rem;
+  }
 
-  .acerca-inner     { grid-template-columns: 1fr; }
-  .acerca-left      { display: none; }
-  .acerca-right     { padding: 3rem 2rem; border-left: none; }
+  .acerca-inner {
+    grid-template-columns: 1fr;
+  }
+  .acerca-left {
+    display: none;
+  }
+  .acerca-right {
+    padding: 3rem 2rem;
+    border-left: none;
+  }
 
-  .footer-inner     { padding: 0 2rem; }
-  .footer-top       { flex-direction: column; gap: 2rem; }
-  .footer-vdivider  { display: none; }
-  .footer-bottom    { flex-direction: column; gap: 0.5rem; }
+  .footer-inner {
+    padding: 0 2rem;
+  }
+  .footer-top {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .footer-vdivider {
+    display: none;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 </style>

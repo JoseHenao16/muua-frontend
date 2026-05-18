@@ -42,21 +42,36 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getImagenUrl } from 'src/services/api'
+import { getImagenesPieza } from 'src/services/api'
 
 const props = defineProps({
   pieza: { type: Object, required: true }
 })
 
-const router = useRouter()
+const router     = useRouter()
+const imagenUrl  = ref('')
 const imagenRota = ref(false)
-const imagenUrl = computed(() => getImagenUrl(props.pieza.numeroRegistro))
+
+async function cargarImagen() {
+  try {
+    const imagenes = await getImagenesPieza(props.pieza.numeroRegistro)
+    if (imagenes.length > 0) {
+      imagenUrl.value = imagenes[0].thumbnail
+    } else {
+      imagenRota.value = true
+    }
+  } catch {
+    imagenRota.value = true
+  }
+}
 
 function irADetalle() {
   router.push({ name: 'pieza', params: { codigo: props.pieza.numeroRegistro } })
 }
+
+onMounted(() => { cargarImagen() })
 </script>
 
 <style scoped>
